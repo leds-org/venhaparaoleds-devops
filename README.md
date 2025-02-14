@@ -63,7 +63,8 @@ Você pode aumentar a sua pontuação no processo de seleção implementando um 
 | Implementar Clean Code |  20  |
 | Implementar o padrão de programação da tecnologia escolhida |  20  |
 | Implementar testes comportamentais |  15  |
-| Total| 115 |
+| Usar tecnologias de IaC (Terraform, ansible, HelmChart, etc)|15|
+| Total| 130 |
 
 Na sua nota final serâo acrescidos os pontos referentes aos itens implementados corretamente.
 
