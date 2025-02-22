@@ -48,13 +48,10 @@ jobs:
         run: |
           export PATH=$HOME/sonar-scanner-7.0.2.4839-linux-x64/bin:$PATH
           sonar-scanner \
-            -Dsonar.projectKey=venhaparaoleds-devops \
-            -Dsonar.sources=src \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.token=$SONAR_TOKEN \
-            -Dsonar.organization=Agner \
-            -Dsonar.branch.name=main \
-            -Dsonar.branch.target=main
+            -Dsonar.organization=agner \
+            -Dsonar.projectKey=agner_venhaparaoleds-devops \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=https://sonarcloud.io
 
       # Passo 7: Construir a imagem Docker
       - name: Build Docker image
