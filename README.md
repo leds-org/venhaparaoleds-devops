@@ -2,6 +2,8 @@
 
 # Projeto: Sistema de Gerenciamento de Concurso Público
 
+---
+
 Este projeto foi desenvolvido com o auxílio de ferramentas de Inteligência Artificial (IA) para aprimorar a qualidade do código, documentação e boas práticas. 
 
 - **[DeepSeek](https://www.deepseek.com/)**: Para insights e otimizações no desenvolvimento.
