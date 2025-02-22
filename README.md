@@ -1,5 +1,3 @@
-Claro! Aqui está o conteúdo do README.md formatado para você salvar diretamente no seu repositório:
-
 ```markdown
 # Concurso Público - Automação CI/CD
 
