@@ -38,6 +38,7 @@ jobs:
       # Passo 5: Rodar os testes
       - name: Run tests
         run: |
+          export PYTHONPATH=$PYTHONPATH:$PWD/src
           pytest tests/ --cov=src --cov-fail-under=80
 
       # Passo 6: Executar Análise do SonarQube
