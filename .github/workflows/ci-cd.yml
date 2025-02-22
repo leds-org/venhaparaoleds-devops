@@ -39,7 +39,7 @@ jobs:
       - name: Run tests
         run: |
           export PYTHONPATH=$PYTHONPATH:$PWD/src
-          pytest tests/ --cov=src --cov-fail-under=0 --cov-report=xml:coverage.xml
+          pytest tests/ --cov=src --cov-fail-under=80 --cov-report=xml:coverage.xml
 
       # Passo 6: Executar Análise do SonarQube
       - name: SonarQube Scan
