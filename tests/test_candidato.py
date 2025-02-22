@@ -46,7 +46,7 @@ def test_candidato_corresponde_ao_concurso_com_vagas_none():
     assert candidato.corresponde_ao_concurso(None) == False
 
 def test_candidato_corresponde_ao_concurso_com_profissoes_none():
-    # Caso 8: Lista de profissões é None
+    # Caso 8: Lista de profissões é None teste
     candidato = Candidato("Lindsey Craft", "19/05/1976", "182.845.084-34", None)
     assert candidato.corresponde_ao_concurso(["carpinteiro"]) == False
 
