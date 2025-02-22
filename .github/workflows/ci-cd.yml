@@ -1,0 +1,92 @@
+name: CI/CD Pipeline with SonarQube and Trivy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      # Passo 1: Verifica o código
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Passo 2: Configura o Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # Passo 3: Instala dependências
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov
+
+      # Passo 4: Instalar SonarScanner
+      - name: Download and Install SonarScanner
+        run: |
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.0.2.4839-linux-x64.zip
+          unzip sonar-scanner.zip -d $HOME
+          export PATH=$HOME/sonar-scanner-7.0.2.4839-linux-x64/bin:$PATH
+
+      # Passo 5: Rodar os testes
+      - name: Run tests
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$PWD/src
+          pytest tests/ --cov=src --cov-fail-under=50 --cov-report=xml:coverage.xml
+
+      # Passo 6: Executar Análise do SonarQube
+      - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          export PATH=$HOME/sonar-scanner-7.0.2.4839-linux-x64/bin:$PATH
+          sonar-scanner \
+            -Dsonar.organization=agner \
+            -Dsonar.projectKey=agner_venhaparaoleds-devops \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=https://sonarcloud.io
+
+      # Passo 7: Construir a imagem Docker
+      - name: Build Docker image
+        run: docker build -t concurso-publico .
+
+      # Passo 8: Instalar o Trivy
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+
+      # Passo 9: Escanear a imagem Docker com Trivy
+      - name: Scan Docker image with Trivy
+        run: |
+          trivy image --severity HIGH,CRITICAL concurso-publico
+
+      # Passo 10: Login no GitHub Packages (apenas para push)
+      - name: Login to GitHub Packages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # Passo 11: Push para o GitHub Container Registry (apenas para push)
+      - name: Push Docker image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          docker tag concurso-publico ghcr.io/agnerloss/venhaparaoleds-devops/concurso-publico:latest
+          docker tag concurso-publico ghcr.io/agnerloss/venhaparaoleds-devops/concurso-publico:${{ github.sha }}
+          docker push ghcr.io/agnerloss/venhaparaoleds-devops/concurso-publico:latest
+          docker push ghcr.io/agnerloss/venhaparaoleds-devops/concurso-publico:${{ github.sha }}
+
+      # Passo 12: Limpar workspace
+      - name: Clean up workspace
+        if: always()
+        run: rm -rf $HOME/sonar-scanner-7.0.2.4839-linux-x64 sonar-scanner.zip
