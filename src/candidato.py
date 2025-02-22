@@ -14,4 +14,6 @@ class Candidato:
         return cls(dados[0], dados[1], dados[2], profissoes)
 
     def corresponde_ao_concurso(self, vagas: list) -> bool:
+        if vagas is None or self.profissoes is None:
+            return False
         return any(profissao in vagas for profissao in self.profissoes)

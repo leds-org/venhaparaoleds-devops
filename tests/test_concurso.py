@@ -49,3 +49,13 @@ def test_concurso_corresponde_ao_candidato_com_profissoes_none():
     # Caso 8: Lista de profissões é None
     concurso = Concurso("SEJUS", "15/2017", "61828450843", ["carpinteiro"])
     assert concurso.corresponde_ao_candidato(None) == False
+
+def test_concurso_corresponde_ao_candidato_com_vagas_vazia():
+    # Caso 9: Lista de vagas está vazia
+    concurso = Concurso("SEJUS", "15/2017", "61828450843", [])
+    assert concurso.corresponde_ao_candidato(["carpinteiro"]) == False
+
+def test_concurso_corresponde_ao_candidato_com_profissoes_vazia():
+    # Caso 10: Lista de profissões está vazia
+    concurso = Concurso("SEJUS", "15/2017", "61828450843", ["carpinteiro"])
+    assert concurso.corresponde_ao_candidato([]) == False

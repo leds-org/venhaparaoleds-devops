@@ -49,3 +49,13 @@ def test_candidato_corresponde_ao_concurso_com_profissoes_none():
     # Caso 8: Lista de profissões é None
     candidato = Candidato("Lindsey Craft", "19/05/1976", "182.845.084-34", None)
     assert candidato.corresponde_ao_concurso(["carpinteiro"]) == False
+
+def test_candidato_corresponde_ao_concurso_com_vagas_vazia():
+    # Caso 9: Lista de vagas está vazia
+    candidato = Candidato("Lindsey Craft", "19/05/1976", "182.845.084-34", ["carpinteiro"])
+    assert candidato.corresponde_ao_concurso([]) == False
+
+def test_candidato_corresponde_ao_concurso_com_profissoes_vazia():
+    # Caso 10: Lista de profissões está vazia
+    candidato = Candidato("Lindsey Craft", "19/05/1976", "182.845.084-34", [])
+    assert candidato.corresponde_ao_concurso(["carpinteiro"]) == False
