@@ -1,4 +1,5 @@
 ---
+
 # Projeto: Sistema de Gerenciamento de Concurso Público
 
 Este projeto é uma aplicação Python que gerencia candidatos e concursos públicos, permitindo a busca de concursos compatíveis com o perfil de um candidato e a listagem de candidatos que se encaixam em um concurso específico.
@@ -13,7 +14,6 @@ Este projeto é uma aplicação Python que gerencia candidatos e concursos públ
   ```bash
   python src/main.py --cpf 12345678901
   ```
----
 
 ### Listar Candidatos Compatíveis com um Concurso
 - **Descrição**: Dado o código de um concurso, o sistema retorna os candidatos que possuem profissões compatíveis com as vagas do concurso.
@@ -28,35 +28,71 @@ Este projeto é uma aplicação Python que gerencia candidatos e concursos públ
 
 ### Pré-requisitos
 
-- Python 3.9 ou superior
-- Docker (opcional, para execução em contêiner)
+- **Python 3.9 ou superior**:
+  - [Documentação oficial do Python](https://www.python.org/doc/)
+  - Para instalar o módulo `venv` no Python 3.12:
+    ```bash
+    sudo apt install python3.12-venv
+    ```
 
-### Instalação
+- **Docker (opcional, para execução em contêiner)**:
+  - [Documentação oficial do Docker](https://docs.docker.com/)
+  - Para usar o Docker sem `sudo`, siga o guia oficial:
+    [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
 
-1. Clone o repositório:
+---
+
+### 1. Usar um Ambiente Virtual (Recomendado)
+
+Para evitar conflitos com pacotes do sistema, é altamente recomendado usar um ambiente virtual. Siga os passos abaixo:
+
+1. **Instale o módulo `venv`** (se ainda não estiver instalado):
    ```bash
-   git clone https://github.com/agnerloss/venhaparaoleds-devops.git
-   cd venhaparaoleds-devops
+   sudo apt install python3.12-venv
    ```
 
-2. Instale as dependências:
+2. **Crie um ambiente virtual**:
+   ```bash
+   python3 -m venv venv
+   ```
+
+3. **Ative o ambiente virtual**:
+   - No Linux/Mac:
+     ```bash
+     source venv/bin/activate
+     ```
+   - No Windows:
+     ```bash
+     venv\Scripts\activate
+     ```
+
+4. **Instale as dependências**:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Execute o projeto:
+5. **Execute o projeto**:
    ```bash
    python src/main.py
    ```
 
-### Executando com Docker
+6. **Desative o ambiente virtual** quando terminar:
+   ```bash
+   deactivate
+   ```
 
-1. Construa a imagem Docker:
+---
+
+### 2. Executando com Docker
+
+Se preferir usar Docker, siga os passos abaixo:
+
+1. **Construa a imagem Docker**:
    ```bash
    docker build -t concurso-publico .
    ```
 
-2. Execute o contêiner:
+2. **Execute o contêiner**:
    ```bash
    docker run concurso-publico
    ```
@@ -158,3 +194,4 @@ Exemplo de integração no pipeline:
 
 Este projeto está licenciado sob a licença MIT. Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
 ```
+
