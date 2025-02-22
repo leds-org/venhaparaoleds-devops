@@ -39,3 +39,13 @@ def test_concurso_init():
     assert concurso.edital == "15/2017"
     assert concurso.codigo == "61828450843"
     assert concurso.vagas == ["carpinteiro"]
+
+def test_concurso_corresponde_ao_candidato_com_vagas_none():
+    # Caso 7: Lista de vagas é None
+    concurso = Concurso("SEJUS", "15/2017", "61828450843", None)
+    assert concurso.corresponde_ao_candidato(["carpinteiro"]) == False
+
+def test_concurso_corresponde_ao_candidato_com_profissoes_none():
+    # Caso 8: Lista de profissões é None
+    concurso = Concurso("SEJUS", "15/2017", "61828450843", ["carpinteiro"])
+    assert concurso.corresponde_ao_candidato(None) == False
