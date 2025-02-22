@@ -1,28 +1,32 @@
 # Stage 1: Build
-FROM python:3.9-slim as builder
+FROM cgr.dev/chainguard/python:latest-dev as builder
 WORKDIR /app
 
 # Copiar o arquivo de dependências
 COPY requirements.txt .
 
-# Instalar as dependências
-RUN pip install --no-cache-dir -r requirements.txt
+# Criar um ambiente virtual e instalar as dependências
+RUN python3 -m venv /app/venv && \
+    /app/venv/bin/pip install --no-cache-dir -r requirements.txt
 
 # Copiar o código-fonte e os arquivos de dados
 COPY src/ ./src/
 COPY candidatos.txt concursos.txt ./
 
 # Stage 2: Run
-FROM python:3.9-slim
+FROM cgr.dev/chainguard/python:latest
 WORKDIR /app
 
-# Copiar as dependências instaladas do estágio anterior
-COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+# Copiar o ambiente virtual e as dependências do estágio anterior
+COPY --from=builder /app/venv /app/venv
 
 # Copiar o código-fonte e os arquivos de dados
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/candidatos.txt .
 COPY --from=builder /app/concursos.txt .
+
+# Configurar o PATH para usar o ambiente virtual
+ENV PATH="/app/venv/bin:$PATH"
 
 # Definir o comando padrão
 ENTRYPOINT ["python", "src/main.py"]
