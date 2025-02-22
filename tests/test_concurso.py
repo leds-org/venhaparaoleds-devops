@@ -31,3 +31,11 @@ def test_concurso_de_linha():
     assert concurso.edital == "15/2017"
     assert concurso.codigo == "61828450843"
     assert concurso.vagas == ["carpinteiro", "professor de matemática", "assistente administrativo"]
+
+def test_concurso_init():
+    # Testar o método __init__
+    concurso = Concurso("SEJUS", "15/2017", "61828450843", ["carpinteiro"])
+    assert concurso.orgao == "SEJUS"
+    assert concurso.edital == "15/2017"
+    assert concurso.codigo == "61828450843"
+    assert concurso.vagas == ["carpinteiro"]

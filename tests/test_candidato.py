@@ -31,3 +31,11 @@ def test_candidato_de_linha():
     assert candidato.data_nascimento == "19/05/1976"
     assert candidato.cpf == "182.845.084-34"
     assert candidato.profissoes == ["carpinteiro"]
+
+def test_candidato_init():
+    # Testar o método __init__
+    candidato = Candidato("Lindsey Craft", "19/05/1976", "182.845.084-34", ["carpinteiro"])
+    assert candidato.nome == "Lindsey Craft"
+    assert candidato.data_nascimento == "19/05/1976"
+    assert candidato.cpf == "182.845.084-34"
+    assert candidato.profissoes == ["carpinteiro"]

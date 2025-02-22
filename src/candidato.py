@@ -1,18 +1,17 @@
-from typing import List
+import ast
 
 class Candidato:
-    def __init__(self, nome: str, data_nascimento: str, cpf: str, profissoes: List[str]):
+    def __init__(self, nome: str, data_nascimento: str, cpf: str, profissoes: list):
         self.nome = nome
         self.data_nascimento = data_nascimento
         self.cpf = cpf
-        self.profissoes = [p.strip() for p in profissoes]
+        self.profissoes = profissoes
 
-    @staticmethod
-    def de_linha(linha: str) -> 'Candidato':
-        nome, data_nascimento, cpf, profissoes = linha.strip().split('\t')
-        profissoes = profissoes.strip('[]')
-        profissoes = [prof.strip() for prof in profissoes.split(',')]
-        return Candidato(nome, data_nascimento, cpf, profissoes)
+    @classmethod
+    def de_linha(cls, linha: str):
+        dados = linha.strip().split("\t")
+        profissoes = ast.literal_eval(dados[3])  # Usa ast.literal_eval para processar a lista
+        return cls(dados[0], dados[1], dados[2], profissoes)
 
-    def corresponde_ao_concurso(self, vagas_concurso: List[str]) -> bool:
-        return any(profissao.strip() in (v.strip() for v in vagas_concurso) for profissao in self.profissoes)
+    def corresponde_ao_concurso(self, vagas: list) -> bool:
+        return any(profissao in vagas for profissao in self.profissoes)
