@@ -1,6 +1,16 @@
+
 ---
 
+```markdown
 # Projeto: Sistema de Gerenciamento de Concurso Público
+
+Este projeto foi desenvolvido com o auxílio de ferramentas de Inteligência Artificial (IA) para aprimorar a qualidade do código, documentação e boas práticas. 
+
+- **[DeepSeek](https://www.deepseek.com/)**: Para insights e otimizações no desenvolvimento.
+- **[ChatGPT](https://openai.com/chatgpt)**: Para revisão de código, sugestões e documentação.
+- **[Grok](https://grok.ai/)**: Para análises e recomendações técnicas.
+
+---
 
 Este projeto é uma aplicação Python que gerencia candidatos e concursos públicos, permitindo a busca de concursos compatíveis com o perfil de um candidato e a listagem de candidatos que se encaixam em um concurso específico.
 
@@ -195,3 +205,4 @@ Exemplo de integração no pipeline:
 Este projeto está licenciado sob a licença MIT. Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
 ```
 
+---
