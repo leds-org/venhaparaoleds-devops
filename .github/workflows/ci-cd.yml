@@ -46,13 +46,13 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          # Definindo o PATH novamente para garantir que o sonar-scanner esteja disponível
           export PATH=$HOME/sonar-scanner-7.0.2.4839-linux-x64/bin:$PATH
           sonar-scanner \
             -Dsonar.projectKey=venhaparaoleds-devops \
             -Dsonar.sources=src \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.organization=agnerloss
 
       # Passo 7: Construir a imagem Docker
       - name: Build Docker image
