@@ -39,7 +39,7 @@ jobs:
       - name: Run tests
         run: |
           export PYTHONPATH=$PYTHONPATH:$PWD/src
-          pytest tests/ --cov=src --cov-fail-under=0
+          pytest tests/ --cov=src --cov-fail-under=0 --cov-report=xml:coverage.xml
 
       # Passo 6: Executar Análise do SonarQube
       - name: SonarQube Scan
@@ -51,8 +51,9 @@ jobs:
             -Dsonar.projectKey=venhaparaoleds-devops \
             -Dsonar.sources=src \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.organization=agnerloss
+            -Dsonar.token=$SONAR_TOKEN \
+            -Dsonar.organization=agnerloss \
+            -Dsonar.python.coverage.reportPaths=coverage.xml
 
       # Passo 7: Construir a imagem Docker
       - name: Build Docker image
@@ -68,4 +69,11 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           docker tag concurso-publico ghcr.io/${{ github.repository }}/concurso-publico:latest
+          docker tag concurso-publico ghcr.io/${{ github.repository }}/concurso-publico:${{ github.sha }}
           docker push ghcr.io/${{ github.repository }}/concurso-publico:latest
+          docker push ghcr.io/${{ github.repository }}/concurso-publico:${{ github.sha }}
+
+      # Passo 10: Limpar workspace
+      - name: Clean up workspace
+        if: always()
+        run: rm -rf $HOME/sonar-scanner-7.0.2.4839-linux-x64 sonar-scanner.zip
