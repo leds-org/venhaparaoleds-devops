@@ -1,11 +1,3 @@
-Perfeito! Agora que o Dockerfile está correto e o pipeline de CI/CD está funcionando com o Trivy, vamos atualizar o `README.md` para refletir todas as melhorias e boas práticas que implementamos.
-
----
-
-### `README.md` Atualizado
-
-Aqui está a versão atualizada do `README.md`:
-
 ```markdown
 # Projeto: Concurso Público
 
