@@ -1,5 +1,5 @@
 ```markdown
-# Projeto: Concurso Público
+# Projeto: Sistema de Gerenciamento de Concurso Público
 
 Este projeto é uma aplicação Python que gerencia candidatos e concursos públicos, permitindo a busca de concursos compatíveis com o perfil de um candidato e a listagem de candidatos que se encaixam em um concurso específico.
 
@@ -7,11 +7,19 @@ Este projeto é uma aplicação Python que gerencia candidatos e concursos públ
 
 ## Funcionalidades
 
-- **Listar concursos compatíveis com um candidato**:
-  - Dado o CPF de um candidato, o sistema retorna os concursos públicos que se encaixam no seu perfil, com base nas profissões cadastradas.
+### Listar Concursos Compatíveis com um Candidato
+- **Descrição**: Dado o CPF de um candidato, o sistema retorna os concursos públicos que se encaixam no seu perfil, com base nas profissões cadastradas.
+- **Exemplo de Uso**:
+  ```bash
+  python src/main.py --cpf 12345678901
+  ```
 
-- **Listar candidatos compatíveis com um concurso**:
-  - Dado o código de um concurso, o sistema retorna os candidatos que possuem profissões compatíveis com as vagas do concurso.
+### Listar Candidatos Compatíveis com um Concurso
+- **Descrição**: Dado o código de um concurso, o sistema retorna os candidatos que possuem profissões compatíveis com as vagas do concurso.
+- **Exemplo de Uso**:
+  ```bash
+  python src/main.py --concurso 98765
+  ```
 
 ---
 
@@ -150,5 +158,4 @@ Exemplo de integração no pipeline:
 Este projeto está licenciado sob a licença MIT. Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
 ```
 
----
-
+--- 
