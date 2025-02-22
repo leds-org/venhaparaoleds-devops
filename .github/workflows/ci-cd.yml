@@ -1,4 +1,4 @@
-name: CI/CD Pipeline with SonarQube
+name: CI/CD Pipeline with SonarQube and Trivy
 
 on:
   push:
@@ -57,12 +57,27 @@ jobs:
       - name: Build Docker image
         run: docker build -t concurso-publico .
 
-      # Passo 8: Login no GitHub Packages (apenas para push)
+      # Passo 8: Instalar o Trivy
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+
+      # Passo 9: Escanear a imagem Docker com Trivy
+      - name: Scan Docker image with Trivy
+        run: |
+          trivy image --severity HIGH,CRITICAL concurso-publico
+
+      # Passo 10: Login no GitHub Packages (apenas para push)
       - name: Login to GitHub Packages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      # Passo 9: Push para o GitHub Container Registry (apenas para push)
+      # Passo 11: Push para o GitHub Container Registry (apenas para push)
       - name: Push Docker image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
@@ -71,7 +86,7 @@ jobs:
           docker push ghcr.io/agnerloss/venhaparaoleds-devops/concurso-publico:latest
           docker push ghcr.io/agnerloss/venhaparaoleds-devops/concurso-publico:${{ github.sha }}
 
-      # Passo 10: Limpar workspace
+      # Passo 12: Limpar workspace
       - name: Clean up workspace
         if: always()
         run: rm -rf $HOME/sonar-scanner-7.0.2.4839-linux-x64 sonar-scanner.zip
