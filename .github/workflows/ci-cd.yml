@@ -28,7 +28,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest pytest-cov
 
-      # Passo 4: Instalar SonarScanner (usando a versão 7.0.2.4839)
+      # Passo 4: Instalar SonarScanner
       - name: Download and Install SonarScanner
         run: |
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.0.2.4839-linux-x64.zip
@@ -53,7 +53,8 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.token=$SONAR_TOKEN \
             -Dsonar.organization=agnerloss \
-            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.branch.name=main \
+            -Dsonar.branch.target=main
 
       # Passo 7: Construir a imagem Docker
       - name: Build Docker image
