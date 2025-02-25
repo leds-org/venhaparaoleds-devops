@@ -1,3 +1,10 @@
+# Desafio DevOps - LEDS
+*Bem-vindo!* 👋
+
+Neste desafio, você terá a oportunidade de demonstrar que possui as habilidades necessárias para atuar no time de DevOps do laboratório.
+
+# Contextualização
+
 O desafio é implementar uma automação de CI/CD usando Github Actions para um  programa que permita realizar as seguintes buscas: 
 1. Listar os **órgãos, códigos e editais dos concursos públicos** que se encaixam no perfil do candidato, tomando como base o seu **CPF**; 
 2. Listar o **nome, data de nascimento e o CPF** dos candidatos que se encaixam no perfil do concurso tomando com base o **Código do Concurso** do concurso público;
@@ -24,15 +31,13 @@ O arquivo **concursos.txt** contém as informações dos concursos públicos:
 | SEJUS | 15/2017  |  61828450843  |  [carpinteiro,professor de matemática,assistente administrativo] |
 | SEJUS | 17/2017 |  95655123539  |  [professor de matemática] |
 
-**Escolha as tecnologias que você usará e monte uma solução completa para rodar a aplicação**.
+🤩 **As tecnologias a serem utilizadas na implementação da solução ficam a seu critério!**
 
-Para enviar o resultado, basta realizar um **Fork** deste repositório e **abrir um Pull Request** **com seu nome e o número de inscrição**.  
+# Como entregar?
+1. Faça um **fork** do repositório. Nesse fork esperamos encontrar uma documentação completa da solução e a listagem dos diferenciais implementados.
+2. Abra um **pull request (PR)** do seu fork para o nome repositório com o seu nome como título. Assim conseguimos te localizar melhor e ver que você já finalizou o desafio!
 
-**Atenção: você deve enviar apenas o código fonte. Não serão aceitos códigos compilados**.
-
-Por fim, você deve atualizar o Readme.md com as seguintes informações: 
-1. Documentação da solução e da automação do CI/CD;
-2. Lista dos diferenciais implementados. 
+🚨 **Atenção**: você deve enviar apenas o código fonte. Não serão aceitos códigos compilados.
 
 ## Avaliação
 
@@ -53,8 +58,7 @@ O programa será avaliado levando em conta os seguintes critérios:
 A sua pontuação será a soma dos valores obtidos nos critérios acima.
 
 ## Diferenciais 
-
-Você pode aumentar a sua pontuação no processo de seleção implementando um ou mais dos itens abaixo:
+Você pode **aumentar sua pontuação** implementando os seguintes diferenciais:
 
 | Item  | Pontos Ganhos | 
 |---|---|
@@ -66,12 +70,35 @@ Você pode aumentar a sua pontuação no processo de seleção implementando um 
 | Usar tecnologias de IaC (Terraform, ansible, HelmChart, etc)|15|
 | Total| 130 |
 
-Na sua nota final serâo acrescidos os pontos referentes aos itens implementados corretamente.
+A pontuação final será calculada somando os critérios obrigatórios e os diferenciais implementados corretamente.
 
-## Penalizações
+# Penalizações
 
-Você será desclassifiado nas seguintes situações:
+Você será desclassificado se:
 
-1. Se submeter um solução que não funcione; 
-2. Se não cumprir os critérios presentes no seção **Avaliação**;
-3. Se cometer plágio.
+1. Enviar uma solução que não funcione.
+2. Não cumprir os critérios da seção **Avaliação**.
+3. For identificado plágio.
+   
+***Que a força esteja com você. Boa sorte!***
+
+<div align="left">
+</div>
+
+###
+
+<br clear="both">
+
+<div align="center">
+  <a href="https://www.linkedin.com/school/ledsifes" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=LinkedIn&logo=linkedin&label=&color=0077B5&logoColor=white&labelColor=&style=for-the-badge" height="40" alt="linkedin logo"  />
+  </a>
+  <a href="https://www.instagram.com/ledsifes/" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=Instagram&logo=instagram&label=&color=E4405F&logoColor=white&labelColor=&style=for-the-badge" height="40" alt="instagram logo"  />
+  </a>
+  <a href="https://www.youtube.com/@ledsifes/?sub_confirmation=1" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=Youtube&logo=youtube&label=&color=FF0000&logoColor=white&labelColor=&style=for-the-badge" height="40" alt="youtube logo"  />
+  </a>
+</div>
+
+###
