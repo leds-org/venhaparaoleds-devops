@@ -228,7 +228,7 @@ A conexão com o banco de dados é gerenciada pelo **SQLAlchemy** e a sessão do
 
 **Exemplo de Requisição:**
 ```http
-GET /concursos/12345678900
+GET /concursos/123.456.789-00
 ```
 
 **Exemplo de Resposta:**
