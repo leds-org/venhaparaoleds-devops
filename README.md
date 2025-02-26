@@ -10,7 +10,6 @@ Este repositório é uma solução DevOps completa, abrangendo a configuração 
 4. [GitHub Actions](#github-actions)
 5. [Terraform](#terraform)
    - [Provedor AWS](#provedor-aws)
-   - [Repositório ECR](#repositório-ecr)
    - [Instância EC2](#instância-ec2)
    - [IAM e Políticas](#iam-e-políticas)
 6. [Como funciona a API](#como-funciona-a-api)
@@ -28,7 +27,7 @@ Antes de começar, verifique se você tem as ferramentas e configurações neces
 - **Terraform**: Para provisionamento de infraestrutura na AWS.
 - **AWS CLI**: Para gerenciar e configurar recursos AWS diretamente do seu terminal.
 - **GitHub Actions**: Para automação do CI/CD.
-- **Conta AWS**: Com permissões apropriadas para criar e gerenciar recursos como EC2, IAM, ECR, etc.
+- **Conta AWS**: Com permissões apropriadas para criar e gerenciar recursos como EC2, IAM, etc.
 
 ---
 
@@ -183,17 +182,7 @@ provider "aws" {
 }
 ```
 
-### 5.2 Repositório ECR
-
-Configuração para criar um repositório ECR para armazenar as imagens Docker:
-
-```hcl
-resource "aws_ecr_repository" "app_repo" {
-  name = "ledschallenge-repo"
-}
-```
-
-### 5.3 Instância EC2
+### 5.2 Instância EC2
 
 Provisiona uma instância EC2 para rodar a aplicação:
 
@@ -204,7 +193,7 @@ resource "aws_instance" "app_instance" {
 }
 ```
 
-### 5.4 IAM e Políticas
+### 5.3 IAM e Políticas
 
 Define as permissões necessárias para interagir com outros recursos da AWS:
 
