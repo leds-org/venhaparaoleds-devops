@@ -1,0 +1,191 @@
+# Definição do nome da pipeline CI/CD
+name: CI/CD Pipeline
+
+# Configura os eventos que disparam o pipeline, sendo um push ou pull request na branch "main"
+on:
+  push:
+    branches: ["main"]  # Dispara no push para a branch main
+    paths-ignore:
+      - README.md  # Ignora alterações no arquivo README.md
+  pull_request:
+    branches: ["main"]  # Dispara quando um pull request é aberto para a branch main
+    paths-ignore:
+      - README.md  # Ignora alterações no arquivo README.md
+
+jobs:
+  # Job de testes
+  test:
+    runs-on: ubuntu-latest  # Roda em uma máquina virtual com Ubuntu mais recente
+    steps:
+      # Passo 1: Faz o checkout do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v3  # Usa a ação de checkout do repositório
+
+      # Passo 2: Configura o Python 3.11 no ambiente
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'  # Define a versão do Python a ser utilizada
+
+      # Passo 3: Instala as dependências do projeto usando o pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Instala as dependências do arquivo requirements.txt
+
+      # Passo 4: Define o PYTHONPATH para o diretório atual
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV  # Define a variável de ambiente PYTHONPATH
+
+      # Passo 5: Executa os testes com cobertura de código
+      - name: Run tests with coverage
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}  # Passa a variável DATABASE_URL como segredo
+        run: |
+          pytest --cov=api --cov-report=xml  # Executa os testes com cobertura e gera relatório XML
+
+      # Passo 6: Faz o upload do relatório de cobertura
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4  # Usa a ação para enviar o relatório de cobertura como artefato
+        with:
+          name: coverage-report
+          path: coverage.xml  # O caminho do arquivo de cobertura
+
+  # Job de análise do SonarQube
+  sonar:
+    runs-on: ubuntu-latest  # Roda em uma máquina Ubuntu
+    needs: test  # Esse job depende do job "test" para ser executado
+    steps:
+      # Passo 1: Faz o checkout do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Passo 2: Baixa o relatório de cobertura
+      - name: Download coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report  # Baixa o artefato de cobertura gerado no job anterior
+
+      # Passo 3: Baixa e instala o SonarScanner
+      - name: Download and Install SonarScanner
+        run: |
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.0.2.4839-linux-x64.zip
+          unzip sonar-scanner.zip -d $HOME  # Baixa e descompacta o scanner
+          echo "$HOME/sonar-scanner-7.0.2.4839-linux-x64/bin" >> $GITHUB_PATH  # Adiciona o sonar-scanner ao PATH
+
+      # Passo 4: Executa a análise no SonarQube
+      - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Passa o token de autenticação como segredo
+        run: |
+          sonar-scanner \
+            -Dsonar.organization=filipesuhett \
+            -Dsonar.projectKey=filipesuhett_ledschallenge \
+            -Dsonar.sources=api \
+            -Dsonar.python.coverage.reportPaths=coverage.xml \
+            -Dsonar.host.url=https://sonarcloud.io  # Configura o SonarQube e envia os dados de cobertura
+
+  # Job de infraestrutura usando Terraform
+  terraform:
+    runs-on: ubuntu-latest  # Roda em uma máquina Ubuntu
+    needs: sonar  # Esse job depende do job "sonar"
+    steps:
+      # Passo 1: Faz o checkout do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Passo 2: Configura as credenciais da AWS
+      - name: Configure AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Usando a chave de acesso da AWS como segredo
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Usando a chave secreta da AWS como segredo
+          aws-region: ${{ secrets.AWS_REGION }}  # Região da AWS
+
+      # Passo 3: Instala o Terraform
+      - name: Instalar Terraform
+        uses: hashicorp/setup-terraform@v2  # Instala o Terraform no ambiente
+
+      # Passo 4: Navega até o diretório Terraform e executa comandos
+      - name: Navegar até a pasta terraform e inicializar
+        run: |
+          cd terraform
+          terraform init  # Inicializa o diretório com o Terraform
+          terraform plan -out=tfplan  # Planeja a execução
+          terraform show -no-color tfplan  # Exibe o plano sem cores
+
+      # Passo 5: Aplica o plano do Terraform
+      - name: Aplicar Terraform
+        run: |
+          cd terraform
+          terraform apply -auto-approve  # Aplica as mudanças sem confirmação manual
+
+  # Job de construção do Docker
+  build:
+    runs-on: ubuntu-latest  # Roda em uma máquina Ubuntu
+    needs: terraform  # Esse job depende do job "terraform"
+    steps:
+      # Passo 1: Faz o checkout do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Passo 2: Constrói a imagem Docker com o segredo DATABASE_URL
+      - name: Build Docker image with secret DATABASE_URL
+        run: |
+          docker build --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} -t ledschallenge:latest .  # Constrói a imagem Docker com o argumento de banco de dados
+
+      # Passo 3: Salva a imagem Docker em um arquivo tar
+      - name: Save Docker image as tar file
+        run: |
+          docker save -o ledschallenge.tar ledschallenge:latest  # Salva a imagem em formato .tar
+
+      # Passo 4: Faz o upload do arquivo tar como artefato
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ledschallenge-image
+          path: ledschallenge.tar  # Envia a imagem como artefato
+
+  # Job de deployment
+  deploy:
+    runs-on: ubuntu-latest  # Roda em uma máquina Ubuntu
+    needs: build  # Esse job depende do job "build"
+    steps:
+      # Passo 1: Faz o checkout do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Passo 2: Configura as credenciais da AWS para o deployment (caso precise de algum recurso da AWS)
+      - name: Configure AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Chave de acesso da AWS
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Chave secreta da AWS
+          aws-region: ${{ secrets.AWS_REGION }}  # Região da AWS
+
+      # Passo 3: Faz login no Docker Hub usando o token pessoal
+      - name: Docker Hub Login
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}  # Login com o token
+
+      # Passo 4: Baixa a imagem Docker criada no job anterior
+      - name: Baixar imagem do build
+        uses: actions/download-artifact@v4
+        with:
+          name: ledschallenge-image
+          path: ./  # Baixa o artefato contendo a imagem Docker
+
+      # Passo 5: Carrega a imagem Docker no ambiente
+      - name: Load Docker image
+        run: docker load -i ledschallenge.tar  # Carrega a imagem Docker
+
+      # Passo 6: Marca e faz push da imagem para o Docker Hub
+      - name: Tag e Push para Docker Hub
+        run: |
+          IMAGE_TAG=latest
+          REPO_URI=docker.io/${{ secrets.DOCKER_USERNAME }}/ledschallenge  # Substitua pelo seu repositório no Docker Hub
+
+          docker tag ledschallenge:latest $REPO_URI:$IMAGE_TAG  # Marca a imagem com a tag "latest"
+          docker push $REPO_URI:$IMAGE_TAG  # Envia a imagem para o Docker Hub
+
+
